@@ -3,11 +3,11 @@ class ShopingList {
   String name;
   int priority;
 
-  ShopingList({
-    required this.id,
-    required this.name,
-    required this.priority,
-  });
+  ShopingList(
+    this.id,
+    this.name,
+    this.priority,
+  );
 
   Map<String, dynamic> toMap() {
     return {
