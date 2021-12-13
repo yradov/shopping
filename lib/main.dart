@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DBHelper helper = DBHelper();
-    helper.testDb();
+    //helper.testDb();
 
     return MaterialApp(
       title: 'Shoping List',
