@@ -34,7 +34,15 @@ class DBHelper {
     );
 
     return id;
-  }// insertList
+  } // insertList
+
+  Future<List<ShopingList>> getLists() async {
+    final List<Map<String, dynamic>> maps = await db!.query('lists');
+
+    return List.generate(maps.length, (i) {
+      return ShopingList(maps[i]['id'], maps[i]['name'], maps[i]['priority']);
+    });
+  }// getLists
 
   Future<int> insertItem(ListItem item) async {
     int id = await db!.insert(
@@ -44,7 +52,7 @@ class DBHelper {
     );
 
     return id;
-  }// insertItem
+  } // insertItem
 
   Future testDb() async {
     db = await openDb();

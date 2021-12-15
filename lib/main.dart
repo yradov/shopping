@@ -36,24 +36,42 @@ class ShList extends StatefulWidget {
 
 class _ShListState extends State<ShList> {
   DBHelper helper = DBHelper();
+  List<ShopingList> shopingList = [];
 
   @override
   Widget build(BuildContext context) {
     showData();
-    return Container();
+    return ListView.builder(
+      itemCount: shopingList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+          title: Text(shopingList[index].name),
+          leading: CircleAvatar(
+            child: Text(shopingList[index].priority.toString()),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {},
+          ),
+        );
+      },
+    );
   } // build
 
   Future showData() async {
     await helper.openDb();
 
-    ShopingList list = ShopingList(0, 'Bakery', 2);
-    int listId = await helper.insertList(list);
-
-    ListItem item = ListItem(0, listId, 'Bread', 'note', '1 kg');
-    int itemId = await helper.insertItem(item);
-
-    print('List Id: ' + listId.toString());
-    print('Item Id: ' + itemId.toString());
+    shopingList = await helper.getLists();
+    setState(() {
+      shopingList = shopingList;
+    });
+    //TESTS CODE
+    // ShopingList list = ShopingList(0, 'Bakery', 2);
+    // int listId = await helper.insertList(list);
+    // ListItem item = ListItem(0, listId, 'Bread', 'note', '1 kg');
+    // int itemId = await helper.insertItem(item);
+    // print('List Id: ' + listId.toString());
+    // print('Item Id: ' + itemId.toString());
   }
 }// _ShListState
 
