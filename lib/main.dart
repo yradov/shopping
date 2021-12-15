@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './util/dbhelper.dart';
-import './models/list_items.dart';
 import './models/shoping_list.dart';
+import './ui/items_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,6 +46,13 @@ class _ShListState extends State<ShList> {
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           title: Text(shopingList[index].name),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItemsScreen(shopingList[index]),
+                ));
+          },
           leading: CircleAvatar(
             child: Text(shopingList[index].priority.toString()),
           ),
