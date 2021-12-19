@@ -41,6 +41,7 @@ class _ShListState extends State<ShList> {
   @override
   Widget build(BuildContext context) {
     showData();
+    
     return ListView.builder(
       itemCount: shopingList.length,
       itemBuilder: (BuildContext context, int index) {

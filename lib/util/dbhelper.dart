@@ -12,6 +12,24 @@ class DBHelper {
   final int version = 1;
   Database? db;
 
+  /*
+      In Dart and Flutter, there is a feature called "factory constructors" that overrides
+    the default behavior when you call the constructor of a class: instead of creating a
+    new instance, the factory constructor only returns an instance of the class.
+      In our case, this means that the first time the factory constructor gets called, it will
+    return a new instance of DbHelper. After DbHelper has already been
+    instantiated, the constructor will not build another instance, but just return the
+    existing one.
+      In detail, first, we are creating a private constructor named _internal. Then, in
+    the factory constructor, we just return it to the outside caller.
+  */
+  static final DBHelper _dbHelper = DBHelper._internal();
+  DBHelper._internal();
+
+  factory DBHelper() {
+    return _dbHelper;
+  }
+
   Future<Database> openDb() async {
     if (db == null) {
       db = await openDatabase(join(await getDatabasesPath(), "shoping.db"),
@@ -42,7 +60,7 @@ class DBHelper {
     return List.generate(maps.length, (i) {
       return ShopingList(maps[i]['id'], maps[i]['name'], maps[i]['priority']);
     });
-  }// getLists
+  } // getLists
 
   Future<int> insertItem(ListItem item) async {
     int id = await db!.insert(
@@ -53,6 +71,21 @@ class DBHelper {
 
     return id;
   } // insertItem
+
+  Future<List<ListItem>> getItems(int idList) async {
+    final List<Map<String, dynamic>> maps =
+        await db!.query('items', where: 'idList = ?', whereArgs: [idList]);
+
+    return List.generate(maps.length, (i) {
+      return ListItem(
+        maps[i]['id'],
+        maps[i]['idList'],
+        maps[i]['name'],
+        maps[i]['quantity'],
+        maps[i]['note'],
+      );
+    });
+  } // getItems
 
   Future testDb() async {
     db = await openDb();
