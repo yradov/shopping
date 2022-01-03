@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './util/dbhelper.dart';
 import './models/shoping_list.dart';
 import './ui/items_screen.dart';
+import './ui/shopping_list_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,27 +22,34 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Shoping List'),
         ),
-        body: ShList(),
+        body: ShoppingList(),
       ),
     );
   }
 } // MyApp
 
-class ShList extends StatefulWidget {
-  ShList({Key? key}) : super(key: key);
+class ShoppingList extends StatefulWidget {
+  ShoppingList({Key? key}) : super(key: key);
 
   @override
-  _ShListState createState() => _ShListState();
+  _ShoppingListState createState() => _ShoppingListState();
 } // ShList
 
-class _ShListState extends State<ShList> {
+class _ShoppingListState extends State<ShoppingList> {
   DBHelper helper = DBHelper();
   List<ShopingList> shopingList = [];
+  late ShopingListDialog dialog;
+
+  @override
+  void initState() {
+    dialog = ShopingListDialog();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     showData();
-    
+
     return ListView.builder(
       itemCount: shopingList.length,
       itemBuilder: (BuildContext context, int index) {
@@ -59,7 +67,12 @@ class _ShListState extends State<ShList> {
           ),
           trailing: IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      dialog.buildDialog(context, shopingList[index], false));
+            },
           ),
         );
       },
