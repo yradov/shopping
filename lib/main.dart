@@ -18,24 +18,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Shoping List'),
-        ),
-        body: ShoppingList(),
-      ),
+      home: ShList(),
     );
   }
 } // MyApp
 
-class ShoppingList extends StatefulWidget {
-  ShoppingList({Key? key}) : super(key: key);
-
+class ShList extends StatefulWidget {
   @override
-  _ShoppingListState createState() => _ShoppingListState();
+  _ShListState createState() => _ShListState();
 } // ShList
 
-class _ShoppingListState extends State<ShoppingList> {
+class _ShListState extends State<ShList> {
   DBHelper helper = DBHelper();
   List<ShopingList> shopingList = [];
   late ShopingListDialog dialog;
@@ -50,32 +43,48 @@ class _ShoppingListState extends State<ShoppingList> {
   Widget build(BuildContext context) {
     showData();
 
-    return ListView.builder(
-      itemCount: shopingList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text(shopingList[index].name),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemsScreen(shopingList[index]),
-                ));
-          },
-          leading: CircleAvatar(
-            child: Text(shopingList[index].priority.toString()),
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      dialog.buildDialog(context, shopingList[index], false));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Shoping List'),
+      ),
+      body: ListView.builder(
+        itemCount: shopingList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(shopingList[index].name),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ItemsScreen(shopingList[index]),
+                  ));
             },
-          ),
-        );
-      },
+            leading: CircleAvatar(
+              child: Text(shopingList[index].priority.toString()),
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        dialog.buildDialog(context, shopingList[index], false));
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                dialog.buildDialog(context, ShopingList(0, '', 0), true),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.pink,
+      ),
     );
   } // build
 
