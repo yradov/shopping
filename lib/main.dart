@@ -50,26 +50,38 @@ class _ShListState extends State<ShList> {
       body: ListView.builder(
         itemCount: shopingList.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(shopingList[index].name),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ItemsScreen(shopingList[index]),
-                  ));
+          return Dismissible(
+            key: Key(shopingList[index].name),
+            onDismissed: (direction) {
+              String strName = shopingList[index].name;
+              helper.deleteList(shopingList[index]);
+              setState(() {
+                shopingList.removeAt(index);
+              });
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text("$strName deleted")));
             },
-            leading: CircleAvatar(
-              child: Text(shopingList[index].priority.toString()),
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) =>
-                        dialog.buildDialog(context, shopingList[index], false));
+            child: ListTile(
+              title: Text(shopingList[index].name),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ItemsScreen(shopingList[index]),
+                    ));
               },
+              leading: CircleAvatar(
+                child: Text(shopingList[index].priority.toString()),
+              ),
+              trailing: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => dialog.buildDialog(
+                          context, shopingList[index], false));
+                },
+              ),
             ),
           );
         },

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_conditional_assignment
+// ignore_for_file: prefer_conditional_assignment, constant_identifier_names
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -86,6 +86,14 @@ class DBHelper {
       );
     });
   } // getItems
+
+  Future<int> deleteList(ShopingList list) async {
+    int result =
+        await db!.delete("items", where: "idList = ?", whereArgs: [list.id]);
+    result =
+        await db!.delete("lists", where: "id = ?", whereArgs: [list.id]);
+    return result;
+  } // deleteList
 
   Future testDb() async {
     db = await openDb();
