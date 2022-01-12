@@ -90,10 +90,15 @@ class DBHelper {
   Future<int> deleteList(ShopingList list) async {
     int result =
         await db!.delete("items", where: "idList = ?", whereArgs: [list.id]);
-    result =
-        await db!.delete("lists", where: "id = ?", whereArgs: [list.id]);
+    result = await db!.delete("lists", where: "id = ?", whereArgs: [list.id]);
     return result;
   } // deleteList
+
+  Future<int> deleteItem(ListItem item) async {
+    int result =
+        await db!.delete("items", where: "id = ?", whereArgs: [item.id]);
+    return result;
+  }
 
   Future testDb() async {
     db = await openDb();

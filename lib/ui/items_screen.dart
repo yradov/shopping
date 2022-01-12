@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/list_items.dart';
 import '../models/shoping_list.dart';
 import '../util/dbhelper.dart';
+import 'list_item_dialog.dart';
 
 class ItemsScreen extends StatefulWidget {
   final ShopingList shopingList;
@@ -21,6 +22,13 @@ class _ItemsScreenState extends State<ItemsScreen> {
 
   DBHelper helper = DBHelper();
   List<ListItem> items = [];
+  late ListItemDialog dialog;
+
+  @override
+  void initState() {
+    dialog = ListItemDialog();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +41,48 @@ class _ItemsScreenState extends State<ItemsScreen> {
       body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(items[index].name),
-            subtitle: Text(
-              'Quantity: ${items[index].quantity} - Note: ${items[index].note}',
-            ),
-            onTap: () {},
-            trailing: IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {},
+          return Dismissible(
+            key: Key(items[index].name),
+            onDismissed: (direction) {
+              String strName = items[index].name;
+              helper.deleteItem(items[index]);
+              setState(() {
+                items.removeAt(index);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("$strName deleted"),
+                ),
+              );
+            },
+            child: ListTile(
+              title: Text(items[index].name),
+              subtitle: Text(
+                'Quantity: ${items[index].quantity} - Note: ${items[index].note}',
+              ),
+              onTap: () {},
+              trailing: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          dialog.buildAlert(context, items[index], false));
+                },
+              ),
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => dialog.buildAlert(
+                  context, ListItem(0, shopingList.id, '', '', ''), true));
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.pink,
       ),
     );
   } // build
