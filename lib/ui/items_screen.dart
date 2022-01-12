@@ -22,17 +22,11 @@ class _ItemsScreenState extends State<ItemsScreen> {
 
   DBHelper helper = DBHelper();
   List<ListItem> items = [];
-  late ListItemDialog dialog;
-
-  @override
-  void initState() {
-    dialog = ListItemDialog();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     showData(shopingList.id);
+    ListItemDialog dialog = ListItemDialog();
 
     return Scaffold(
       appBar: AppBar(
